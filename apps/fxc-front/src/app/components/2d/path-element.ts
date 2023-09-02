@@ -49,6 +49,8 @@ export class PathElement extends connect(store)(LitElement) {
   private encodedRoute = '';
   @state()
   private isFreeDrawing = false;
+  @state()
+  private externalScore?: Score = undefined;
 
   private line?: google.maps.Polyline;
   private optimizedLine?: google.maps.Polyline;
@@ -198,12 +200,18 @@ export class PathElement extends connect(store)(LitElement) {
     store.dispatch(setDistance(google.maps.geometry.spherical.computeLength(line.getPath())));
 
     const points = this.getPathPoints();
+    let score: Score;
+    if (!this.externalScore){
+
     const measure = new Measure(points);
     const scores = LEAGUES[this.league].score(measure);
 
     scores.sort((score1, score2) => score2.points - score1.points);
-    const score = scores[0];
+      score = scores[0];
     store.dispatch(setScore(score));
+    } else {
+      score = this.externalScore;
+    }
 
     let optimizedPath = score.indexes.map((index) => new google.maps.LatLng(points[index].lat, points[index].lon));
     if (score.circuit == CircuitType.FlatTriangle || score.circuit == CircuitType.FaiTriangle) {

@@ -5,6 +5,7 @@ import { Score } from '../logic/score/scorer';
 
 export type PlannerState = {
   score?: Score;
+  externalScore?: Score;
   speed: number;
   distance: number;
   league: string;
@@ -33,6 +34,9 @@ const plannerSlice = createSlice({
   reducers: {
     setScore: (state, action: PayloadAction<Score | undefined>) => {
       state.score = action.payload;
+    },
+    setExternalScore: (state, action: PayloadAction<Score | undefined>) => {
+      state.externalScore = action.payload;
     },
     setDistance: (state, action: PayloadAction<number>) => {
       state.distance = action.payload;
@@ -75,6 +79,7 @@ const plannerSlice = createSlice({
 export const reducer = plannerSlice.reducer;
 export const {
   setScore,
+  setExternalScore,
   setDistance,
   setSpeed,
   setLeague,
